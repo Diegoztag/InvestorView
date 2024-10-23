@@ -1,23 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import { getMessage } from './api';
 
 function App() {
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState(null);
+
+  const fetchMessage = async () => {
+    try {
+      const data = await getMessage();
+      setMessage(data.message);
+    } catch (error) {
+      setError('Error al obtener el mensaje del servidor');
+    }
+  };
+
+  useEffect(() => {
+    fetchMessage();
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Mensaje del Backend</h1>
+      {error ? <p>{error}</p> : <p>{message}</p>}
     </div>
   );
 }
